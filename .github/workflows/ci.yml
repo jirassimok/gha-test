@@ -1,15 +1,30 @@
 name: test
 on:
   push:
+  pull_request:
   workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        two words:
-          - val1
-          - val2
+        usage:
+          - keep
+          - exclude
+          - require label
+        value:
+          - 1
+          - 2
+        cond:
+          - true
+        exclude:
+          - usage: exclude
+            value: 1
+          - usage: exclude
+            value: 2
+
+          - usage: require label
+            cond: ${{! contains(github.event.pull_request.labels.*.name, 'marker')}}
     steps:
       - name: Step 1
         env:
