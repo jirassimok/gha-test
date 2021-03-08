@@ -11,24 +11,22 @@ jobs:
     strategy:
       matrix:
         usage:
-          - keep
-          - exclude
+          - default
           - require label
         value:
           - 1
           - 2
         exclude:
-          - usage: exclude
-            value: 1
-          - usage: exclude
-            value: 2
-
           - usage: require label
             ignore exclusion: >-
               ${{ github.event_name != 'pull_request'
                || contains(github.event.pull_request.labels.*.name, 'marker')
                || contains(github.event.pull_request.labels.*.name, 'mark 2')
                }}
+          - usage: default
+            value: 2
+          - usage: require label
+            value: 2
         ignore exclusion:
           - false
     steps:
