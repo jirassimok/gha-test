@@ -15,8 +15,6 @@ jobs:
         value:
           - 1
           - 2
-        cond:
-          - true
         exclude:
           - usage: exclude
             value: 1
@@ -24,7 +22,13 @@ jobs:
             value: 2
 
           - usage: require label
-            cond: ${{! contains(github.event.pull_request.labels.*.name, 'marker')}}
+            ignore exclusion: >-
+              ${{ github.event_name != 'pull_request'
+               || contains(github.event.pull_request.labels.*.name, 'marker')
+               || contains(github.event.pull_request.labels.*.name, 'mark 2')
+               }}
+        ignore exclusion:
+          - false
     steps:
       - name: Step 1
         env:
