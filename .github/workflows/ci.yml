@@ -13,9 +13,11 @@ jobs:
         usage:
           - default
           - require label
+          - exclude unless abc or label abc
         value:
           - 1
           - 2
+          - abc
         exclude:
           - usage: require label
             ignore exclusion: >-
@@ -23,10 +25,17 @@ jobs:
                || contains(github.event.pull_request.labels.*.name, 'marker')
                || contains(github.event.pull_request.labels.*.name, 'mark 2')
                }}
+          - usage: exclude unless abc or label abc
+            ignore exclusion: >-
+              ${{ github.event_name != 'pull_request'
+               || contains(github.event.pull_request.labels.*.name, 'abc')
+               || matrix.value == 'abc'
+               }}
           - usage: default
             value: 2
           - usage: require label
             value: 2
+          - usage: exclude unless abc or label abc
         ignore exclusion:
           - false
     steps:
