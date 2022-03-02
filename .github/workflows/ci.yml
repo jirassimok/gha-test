@@ -8,38 +8,21 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        usage:
-          - default
-          - require label
-          - exclude unless abc or label abc
-        value:
-          - 1
-          - 2
-          - abc
-        exclude:
-          - usage: require label
-            ignore exclusion: >-
-              ${{ github.event_name != 'pull_request'
-               || contains(github.event.pull_request.labels.*.name, 'marker')
-               || contains(github.event.pull_request.labels.*.name, 'mark 2')
-               }}
-          - usage: exclude unless abc or label abc
-            ignore exclusion: >-
-              ${{ github.event_name != 'pull_request'
-               || contains(github.event.pull_request.labels.*.name, 'abc')
-               || matrix.value == 'abc'
-               }}
-          - usage: default
-            value: 2
-          - usage: require label
-            value: 2
-          - usage: exclude unless abc or label abc
-        ignore exclusion:
-          - false
     steps:
-      - name: Step 1
-        env:
-          event: ${{github.event_name}}
-        run: echo "$event"
+      # Try different multiline string styles to see if they work.
+      - name: Literal clip
+        run: |
+          echo these are
+          echo separate lines
+      - name: Literal strip
+        run: |-
+          echo these are
+          echo separate lines
+      - name: Folded clip
+        run: >
+          echo this should
+          all be one line
+      - name: Folded strip
+        run: >-
+          echo this should
+          all be one line
